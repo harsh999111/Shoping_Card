@@ -180,25 +180,6 @@ const Register = () => {
         }}
       />
 
-      <Dropdown
-        control={control}
-        name="dropdownValue"
-        rules={{
-          required: {
-            value: true,
-            message: "Please select an option.",
-          },
-        }}
-        label="Dropdown"
-        id="dropdown"
-        autoComplete="off"
-        options={[
-          { value: "", label: "Select an option" },
-          { value: "option1", label: "Option 1" },
-          { value: "option2", label: "Option 2" },
-          { value: "option3", label: "Option 3" },
-        ]}
-      />
 
       <div>
         <button
