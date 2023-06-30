@@ -1,12 +1,11 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import Input from "../../Component/Inputs";
-import Dropdown from "../../Component/Dropdown";
-import Checkbox from "../../Component/CheckBox";
-import Radio from "../../Component/Radio";
-import Select from "../../Component/Select";
-
-
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import Input from '../../Component/Inputs';
+import Dropdown from '../../Component/Dropdown';
+import Checkbox from '../../Component/CheckBox';
+import Radio from '../../Component/Radio';
+import Select from '../../Component/Select';
+import FileUpload from '../../Component/File';
 
 const wait = (t) => new Promise((resolve) => setTimeout(resolve, t));
 
@@ -18,7 +17,7 @@ const Register = () => {
     control,
     formState: { errors, isSubmitting, isValid },
   } = useForm({
-    mode: "onBlur",
+    mode: 'onBlur',
   });
 
   const onSubmit = async (data) => {
@@ -40,7 +39,7 @@ const Register = () => {
         rules={{
           required: {
             value: true,
-            message: "Name is required.",
+            message: 'Name is required.',
           },
         }}
         label="Name"
@@ -54,11 +53,11 @@ const Register = () => {
         rules={{
           required: {
             value: true,
-            message: "Email is required.",
+            message: 'Email is required.',
           },
           pattern: {
             value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            message: "Please provide a valid email address.",
+            message: 'Please provide a valid email address.',
           },
         }}
         label="Email"
@@ -73,7 +72,7 @@ const Register = () => {
         rules={{
           required: {
             value: true,
-            message: "Password is required.",
+            message: 'Password is required.',
           },
         }}
         label="Password"
@@ -88,14 +87,11 @@ const Register = () => {
         rules={{
           required: {
             value: true,
-            message: "Confirm Password is required.",
+            message: 'Confirm Password is required.',
           },
           validate: (value) => {
             const { password } = getValues();
-            return (
-              value === password ||
-              "Password should match Confirm Password."
-            );
+            return value === password || 'Password should match Confirm Password.';
           },
         }}
         label="Confirm Password"
@@ -104,13 +100,13 @@ const Register = () => {
         autoComplete="new-password"
       />
 
-    <Select
+      <Select
         control={control}
         name="hobbies"
         rules={{
           required: {
             value: true,
-            message: "Hobbies is Required..",
+            message: 'Hobbies is Required..',
           },
         }}
         label="Hobbies"
@@ -118,30 +114,30 @@ const Register = () => {
         placeholder="Please select hobby"
         options={[
           {
-            value: "cricket",
-            text: "Cricket",
+            value: 'cricket',
+            text: 'Cricket',
           },
           {
-            value: "Book",
-            text: "Book",
+            value: 'book',
+            text: 'Book',
           },
         ]}
       />
 
-    <Radio
+      <Radio
         label="Gender"
         items={[
           {
-            id: "male",
-            text: "Male",
+            id: 'male',
+            text: 'Male',
           },
           {
-            id: "female",
-            text: "Female",
+            id: 'female',
+            text: 'Female',
           },
           {
-            id: "other",
-            text: "Other",
+            id: 'other',
+            text: 'Other',
           },
         ]}
         name="gender"
@@ -149,7 +145,7 @@ const Register = () => {
         rules={{
           required: {
             value: true,
-            message: "gender is Required..",
+            message: 'Gender is Required..',
           },
         }}
       />
@@ -158,16 +154,16 @@ const Register = () => {
         label="CAR"
         items={[
           {
-            id: "Fortuner",
-            text: "Fortuner",
+            id: 'Fortuner',
+            text: 'Fortuner',
           },
           {
-            id: "THAR",
-            text: "THAR",
+            id: 'THAR',
+            text: 'THAR',
           },
           {
-            id: "BMW",
-            text: "BMW",
+            id: 'BMW',
+            text: 'BMW',
           },
         ]}
         name="check"
@@ -175,16 +171,27 @@ const Register = () => {
         rules={{
           required: {
             value: true,
-            message: "Checkbox is Required..",
+            message: 'Checkbox is Required..',
           },
         }}
       />
 
+      <FileUpload
+        control={control}
+        name="file"
+        label="Upload File"
+        rules={{
+          required: {
+            value: true,
+            message: 'File is required.',
+          },
+        }}
+      />
 
       <div>
         <button
           type="submit"
-          // disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isValid}
           className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-slate-400 disabled:cursor-wait"
         >
           Sign up
