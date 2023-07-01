@@ -5,7 +5,7 @@ import Dropdown from '../../Component/Dropdown';
 import Checkbox from '../../Component/CheckBox';
 import Radio from '../../Component/Radio';
 import Select from '../../Component/Select';
-import FileUpload from '../../Component/File';
+import File from '../../Component/FileComponent';
 
 const wait = (t) => new Promise((resolve) => setTimeout(resolve, t));
 
@@ -176,16 +176,18 @@ const Register = () => {
         }}
       />
 
-      <FileUpload
+<File
         control={control}
-        name="file"
-        label="Upload File"
+        name="avatar"
         rules={{
           required: {
             value: true,
-            message: 'File is required.',
+            message: "avatar is Required..",
           },
         }}
+        label="Avatar"
+        id="avatar"
+        multiple
       />
 
       <div>
