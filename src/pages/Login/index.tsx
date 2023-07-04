@@ -1,4 +1,7 @@
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
 
 const wait = (t: number) => new Promise((resolve) => setTimeout(resolve, t));
 
@@ -12,16 +15,12 @@ const Login = (props: Props) => {
   } = useForm({
     mode: "onBlur",
   });
-
-  const onSubmit = async (data) => {
-    await wait(5000);
-    console.log(data);
-  };
+  const { login } = useContext(AuthContext);
 
   console.log(errors);
 
   return (
-    <form className="space-y-6" noValidate onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-6" noValidate onSubmit={handleSubmit(login)}>
       <div>
         <label
           htmlFor="email"
@@ -83,14 +82,14 @@ const Login = (props: Props) => {
                 value: true,
                 message: "Password is Required..",
               },
-              minLength: {
-                value: 6,
-                message: "Password should min 6 character",
-              },
-              maxLength: {
-                value: 20,
-                message: "Password should max 20 character",
-              },
+              // minLength: {
+              //   value: 6,
+              //   message: "Password should min 6 character",
+              // },
+              // maxLength: {
+              //   value: 20,
+              //   message: "Password should max 20 character",
+              // },
             })}
           />
           {errors.password && (

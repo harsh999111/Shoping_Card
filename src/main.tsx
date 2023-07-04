@@ -9,7 +9,28 @@ import MainLayout from "./layouts/mainLayout";
 import About from "./pages/About";
 import AuthLayout from "./layouts/authLayout";
 import "./index.css";
+import { AuthProvider } from "./context/authContext";
 
+// Mounting
+
+// -> Constructor(call only Once) (initialize of state base on props)
+// -> getDerivedStateFromProps(static) (update state value base on props and state)
+// -> render (render HTML)
+// -> componentDidMount(call only Once)(API Call/event register/DOM manipulation)
+
+// Updating
+// -> getDerivedStateFromProps(static)
+// -> shouldComponentUpdate (imrove Performace)
+// -> render
+// -> getSnapShotBeforeUpdate (calculate DOM)(not possible in function component)
+// -> componentDidUpdate (DOM manipulation)
+
+// UnMounting
+// -> componentWillUnmount (cancel async calls)
+
+// Error (not possible in function component)
+// -> getDerivedStateFromError(static) (display error)
+// -> componentDidCatch (log error)
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,6 +68,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

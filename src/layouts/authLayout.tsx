@@ -1,11 +1,20 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Outlet, useLocation, useNavigate, Navigate } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
 
 type Props = {};
 
 const AuthLayout = (props: Props) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const { user } = useContext(AuthContext);
 
   const isRegister = !!location.pathname.match(/register/i);
+
+  if (user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

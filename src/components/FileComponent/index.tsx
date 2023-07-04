@@ -59,7 +59,7 @@ const File = ({ name, control, rules, id, label, ...props }: Props) => {
               field.onChange(event?.target?.files);
             }}
           />
-          <button type="button" onClick={() => fileInput.current.click() } className="bg-blue-400 py-1 px-2 relative left-4 rounded-lg">
+          <button type="button" onClick={() => fileInput.current.click()}>
             Upload Image
           </button>
         </div>
