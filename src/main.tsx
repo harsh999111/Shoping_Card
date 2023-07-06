@@ -10,7 +10,7 @@ import About from "./pages/About";
 import AuthLayout from "./layouts/authLayout";
 import "./index.css";
 import { AuthProvider } from "./context/authContext";
-import Product from "../src/components/Productlist/index.tsx";
+import Product from "./components/Product/index.tsx";
 
 
 const router = createBrowserRouter([
