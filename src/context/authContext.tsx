@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const { confirmPassword, ...rest } = data;
       const res = await axiosInstance.post("register", rest);
-      sessionStorage.setItem("token", JSON.stringify(res.data));
+      sessionStorage.setItem("token", JSON.stringify(res));
       setUser(res);
     } catch (error) {
       console.log(error);
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (data) => {
     try {
       const res = await axiosInstance.post("login", data);
-      sessionStorage.setItem("token", JSON.stringify(res.data));
+      sessionStorage.setItem("token", JSON.stringify(res));
       setUser(res);
     } catch (error) {
       console.log(error);

@@ -10,7 +10,7 @@ import About from "./pages/About";
 import AuthLayout from "./layouts/authLayout";
 import "./index.css";
 import { AuthProvider } from "./context/authContext";
-import Product from "./components/Product/index.tsx";
+import Product from "./pages/Product/index.tsx";
 
 
 const router = createBrowserRouter([
@@ -25,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
+      },
+      {
+        path: "product/:id",
+        element: <Product />,
       },
     ],
   },
