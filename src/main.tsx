@@ -10,16 +10,25 @@ import About from "./pages/About";
 import AuthLayout from "./layouts/authLayout";
 import "./index.css";
 import { AuthProvider } from "./context/authContext";
-import Product from "./pages/Product/index.tsx";
+import Product from "./pages/Product/index.js";
+import { ProductsProvider } from "./context/productsContext.js";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <ProductsProvider>
+        <MainLayout />
+      </ProductsProvider>
+    ),
     children: [
       {
         index: true,
+        element: <Home />,
+      },
+      {
+        path: ":productCategory",
         element: <Home />,
       },
       {
@@ -57,6 +66,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-    {/* <Product/> */}
   </React.StrictMode>
 );

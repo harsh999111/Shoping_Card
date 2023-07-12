@@ -2,7 +2,8 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/24/solid";
 import axiosInstance from "../../axiosInstance.js";
 import { AuthContext } from "../../context/authContext";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useProducts } from "../../context/productsContext.js";
 
 type Props = {};
 
@@ -10,22 +11,27 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Home = (props: Props) => {
-  const { user } = useContext(AuthContext);
-  const [products, setProducts] = useState([]);
-
-  const loadProducts = useCallback(async () => {
-    try {
-      const res = await axiosInstance.get("660/products");
-      setProducts(res);
-    } catch (error) {
-      console.log(error.message);
-    }
-  }, [user.accessToken]);
+const Home = ({ routes }: Props) => {
+  const { products, loadProducts } = useProducts();
+  const { productCategory } = useParams();
 
   useEffect(() => {
-    loadProducts();
-  }, []);
+    loadProducts(productCategory);
+  }, [productCategory]);
+
+  // const { productCategory } = useParams();
+  // const [filteredProducts, setFilteredProducts] = useState([]);
+
+  // useEffect(() => {
+  //   let finalProducts = products;
+
+  //   if (productCategory) {
+  //     finalProducts = products.filter((x) => x.category === productCategory);
+  //   }
+  //   setFilteredProducts(finalProducts);
+  // }, [products, productCategory]);
+
+  // console.log(productCategory);
 
   return (
     <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
