@@ -11,15 +11,17 @@ import AuthLayout from "./layouts/authLayout";
 import "./index.css";
 import { AuthProvider } from "./context/authContext";
 import Product from "./pages/Product/index.js";
-import { ProductsProvider } from "./context/productsContext.js";
-
+import { ProductsProvider } from "./context/productsContext.tsx";
+import { CartProvider } from "./context/cartContext.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProductsProvider>
-        <MainLayout />
+        <CartProvider>
+          <MainLayout />
+        </CartProvider>
       </ProductsProvider>
     ),
     children: [

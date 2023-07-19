@@ -1,5 +1,17 @@
-import { useContext, useEffect, Fragment, useState } from "react";
-import { Outlet, useNavigate, Navigate, Link } from "react-router-dom";
+import React, {
+  useContext,
+  useEffect,
+  Fragment,
+  useState,
+  useCallback,
+} from "react";
+import {
+  Outlet,
+  useNavigate,
+  Navigate,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import Header from "../components/Header/index.js";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -10,8 +22,10 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
-import { AuthContext } from "../context/authContext";
-import { useProducts } from "../context/productsContext.js";
+import { AuthContext } from "../context/authContext.tsx";
+import { useProducts } from "../context/productsContext.tsx";
+import { Range, getTrackBackground } from "react-range";
+import { useCart } from "../context/cartContext.tsx";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -69,12 +83,41 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+const STEP = 100;
+
 type Props = {};
 
 const MainLayout = (props: Props) => {
   const { user } = useContext(AuthContext);
-  const { products } = useProducts();
+  const { products, loadProducts } = useProducts();
+  const { loadCart, cart } = useCart();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [values, setValues] = React.useState([]);
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(100);
+
+  console.log(values);
+
+  console.log("location", location);
+
+  const loadData = useCallback(async () => {
+    await Promise.all([loadProducts(), loadCart()]);
+  }, []);
+
+  useEffect(() => {
+    const priceList = products.map((x) => x.price);
+    const minValue = Math.min(...priceList);
+    const maxValue = Math.max(...priceList);
+    setMin(minValue);
+    setMax(maxValue);
+    setValues([minValue, maxValue]);
+  }, [products]);
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   if (!user) {
     return <Navigate to="/auth" />;
@@ -86,7 +129,6 @@ const MainLayout = (props: Props) => {
 
       <div className="bg-white">
         <div>
-          {/* Mobile filter dialog */}
           <Transition.Root show={mobileFiltersOpen} as={Fragment}>
             <Dialog
               as="div"
@@ -148,6 +190,88 @@ const MainLayout = (props: Props) => {
                             )
                           )}
                       </ul>
+
+                      {values && (
+                        <Range
+                          values={values}
+                          step={STEP}
+                          min={min}
+                          max={max}
+                          onChange={(values) => setValues(values)}
+                          renderTrack={({ props, children }) => (
+                            <div
+                              onMouseDown={props.onMouseDown}
+                              onTouchStart={props.onTouchStart}
+                              style={{
+                                ...props.style,
+                                height: "36px",
+                                display: "flex",
+                                width: "100%",
+                              }}
+                            >
+                              <div
+                                ref={props.ref}
+                                style={{
+                                  height: "5px",
+                                  width: "100%",
+                                  borderRadius: "4px",
+                                  background: getTrackBackground({
+                                    values,
+                                    colors: ["#ccc", "#548BF4", "#ccc"],
+                                    min: min,
+                                    max: max,
+                                  }),
+                                  alignSelf: "center",
+                                }}
+                              >
+                                {children}
+                              </div>
+                            </div>
+                          )}
+                          renderThumb={({ index, props, isDragged }) => (
+                            <div
+                              {...props}
+                              style={{
+                                ...props.style,
+                                height: "42px",
+                                width: "42px",
+                                borderRadius: "4px",
+                                backgroundColor: "#FFF",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                boxShadow: "0px 2px 6px #AAA",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  top: "-28px",
+                                  color: "#fff",
+                                  fontWeight: "bold",
+                                  fontSize: "14px",
+                                  fontFamily:
+                                    "Arial,Helvetica Neue,Helvetica,sans-serif",
+                                  padding: "4px",
+                                  borderRadius: "4px",
+                                  backgroundColor: "#548BF4",
+                                }}
+                              >
+                                {values[index].toFixed(1)}
+                              </div>
+                              <div
+                                style={{
+                                  height: "16px",
+                                  width: "5px",
+                                  backgroundColor: isDragged
+                                    ? "#548BF4"
+                                    : "#CCC",
+                                }}
+                              />
+                            </div>
+                          )}
+                        />
+                      )}
 
                       {filters.map((section) => (
                         <Disclosure
@@ -308,6 +432,91 @@ const MainLayout = (props: Props) => {
                       )}
                   </ul>
 
+                  {values && (
+                    <Range
+                      values={values}
+                      step={STEP}
+                      min={min}
+                      max={max}
+                      onChange={(values) => {
+                        setValues(values);
+                        navigate(
+                          `${location.pathname}?price=${values[0]},${values[1]}`
+                        );
+                      }}
+                      renderTrack={({ props, children }) => (
+                        <div
+                          onMouseDown={props.onMouseDown}
+                          onTouchStart={props.onTouchStart}
+                          style={{
+                            ...props.style,
+                            height: "36px",
+                            display: "flex",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            ref={props.ref}
+                            style={{
+                              height: "5px",
+                              width: "100%",
+                              borderRadius: "4px",
+                              background: getTrackBackground({
+                                values,
+                                colors: ["#ccc", "#548BF4", "#ccc"],
+                                min: min,
+                                max: max,
+                              }),
+                              alignSelf: "center",
+                            }}
+                          >
+                            {children}
+                          </div>
+                        </div>
+                      )}
+                      renderThumb={({ index, props, isDragged }) => (
+                        <div
+                          {...props}
+                          style={{
+                            ...props.style,
+                            height: "42px",
+                            width: "42px",
+                            borderRadius: "4px",
+                            backgroundColor: "#FFF",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            boxShadow: "0px 2px 6px #AAA",
+                          }}
+                        >
+                          <div
+                            style={{
+                              position: "absolute",
+                              top: "-28px",
+                              color: "#fff",
+                              fontWeight: "bold",
+                              fontSize: "14px",
+                              fontFamily:
+                                "Arial,Helvetica Neue,Helvetica,sans-serif",
+                              padding: "4px",
+                              borderRadius: "4px",
+                              backgroundColor: "#548BF4",
+                            }}
+                          >
+                            {values[index].toFixed(1)}
+                          </div>
+                          <div
+                            style={{
+                              height: "16px",
+                              width: "5px",
+                              backgroundColor: isDragged ? "#548BF4" : "#CCC",
+                            }}
+                          />
+                        </div>
+                      )}
+                    />
+                  )}
+
                   {filters.map((section) => (
                     <Disclosure
                       as="div"
@@ -375,10 +584,6 @@ const MainLayout = (props: Props) => {
           </main>
         </div>
       </div>
-
-      {/* <main>
-        <Outlet />
-      </main> */}
       <footer>Footer...</footer>
     </>
   );

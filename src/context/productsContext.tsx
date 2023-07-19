@@ -16,12 +16,9 @@ export const ProductsContext = createContext<ProductsContextType>();
 export const ProductsProvider = ({ children }: PropsWithChildren) => {
   const [products, setProducts] = useState([]);
 
-  const loadProducts = useCallback(async (category) => {
+  const loadProducts = useCallback(async () => {
     try {
-      let url = "660/products";
-      if (category) {
-        url += `?category=${category}`;
-      }
+      const url = "660/products";
       const res = await axiosInstance.get(url);
       setProducts(res);
     } catch (error) {
