@@ -1,9 +1,10 @@
 import React from "react";
 import { useController } from "react-hook-form";
+import ReactSlider from "react-slider";
 
 type Props = {};
 
-const slider = ({ name, control, rules, id, label, ...props }: Props) => {
+const Slider = ({ name, control, rules, id, label, ...props }: Props) => {
   const {
     field,
     fieldState: { error },
@@ -24,8 +25,7 @@ const slider = ({ name, control, rules, id, label, ...props }: Props) => {
       <div className="mt-2">
         <ReactSlider
           className="horizontal-slider"
-          thumbClas
-          sName="example-thumb"
+          thumbClassName="example-thumb"
           trackClassName="example-track"
           defaultValue={[0, 100]}
           ariaLabel={["Lower thumb", "Upper thumb"]}
@@ -52,4 +52,4 @@ const slider = ({ name, control, rules, id, label, ...props }: Props) => {
   );
 };
 
-export default Input;
+export default Slider;

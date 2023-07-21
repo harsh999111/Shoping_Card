@@ -14,13 +14,14 @@ function classNames(...classes) {
 
 const Home = ({ routes }: Props) => {
   const { products, loadProducts } = useProducts();
-  const { cart, addToCart, updateCart } = useCart();
+  const { cart, addToCart, updateCart, deleteCart } = useCart();
   const { productCategory } = useParams();
   const [searchParams] = useSearchParams();
 
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
+    // let finalProducts = products;
 
     const price = searchParams.get("price");
 
@@ -121,9 +122,16 @@ const Home = ({ routes }: Props) => {
                 <button
                   type="button"
                   className="mt-2 flex-1 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  onClick={() =>
-                    updateCart({ ...cartItem, quantity: cartItem.quantity - 1 })
-                  }
+                  onClick={() => {
+                    if (cartItem.quantity <= 1) {
+                      deleteCart(cartItem);
+                    } else {
+                      updateCart({
+                        ...cartItem,
+                        quantity: cartItem.quantity - 1,
+                      });
+                    }
+                  }}
                 >
                   -
                 </button>
