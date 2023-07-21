@@ -30,6 +30,7 @@ const products = [
     imageAlt:
       "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
   },
+  // More products...
 ];
 
 export default function Cart() {
@@ -39,6 +40,18 @@ export default function Cart() {
   } = useApp();
   const { cart, deleteCart } = useCart();
   const { products } = useProducts();
+
+
+  const displayCurrency = ({
+    price,
+    locale = 'en-IN',
+    currency = 'INR',
+  }) =>
+    new Intl.NumberFormat(locale, {
+      currency,
+      style: 'currency',
+    }).format(price)
+  
 
   return (
     <Transition.Root show={isCartVisible} as={Fragment}>
@@ -147,7 +160,16 @@ export default function Cart() {
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p>
+                          {displayCurrency({
+                            price: cart.reduce((p, c) => {
+                              const product = products.find(
+                                x => x.id === c.productId
+                              )
+                              return p + c.quantity * product.price
+                            }, 0),
+                          })}
+                        </p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Shipping and taxes calculated at checkout.
