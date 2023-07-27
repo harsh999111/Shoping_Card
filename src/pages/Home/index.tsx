@@ -4,7 +4,7 @@ import axiosInstance from "../../axiosInstance.js";
 import { AuthContext } from "../../context/authContext";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useProducts } from "../../context/productsContext.js";
-import { useCart } from "../../context/cartContext.tsx";
+import { CartTypeEnum, useCart } from "../../context/cartContext.tsx";
 
 type Props = {};
 
@@ -14,7 +14,7 @@ function classNames(...classes) {
 
 const Home = ({ routes }: Props) => {
   const { products, loadProducts } = useProducts();
-  const { cart, addToCart, updateCart, deleteCart } = useCart();
+  const { cart, addToCart, updateCart, deleteCart, cartStatus } = useCart();
   const { productCategory } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -50,6 +50,12 @@ const Home = ({ routes }: Props) => {
 
   console.log(productCategory);
 
+  const loadCart = cartStatus.find(x => x.type === CartTypeEnum.LOAD_CART )
+
+  if(loadCart) {
+    return <div>{loadCart.message}</div>
+  }
+
   return (
     <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
       {filteredProducts.map((product) => {
@@ -69,6 +75,7 @@ const Home = ({ routes }: Props) => {
                   <h3 className="text-sm text-gray-700 line-clamp-1">
                     {product.title}
                   </h3>
+                  {/* <p className="mt-1 text-sm text-gray-500">{product.color}</p> */}
                 </div>
 
                 <p className="text-sm font-medium text-gray-900">
@@ -139,7 +146,8 @@ const Home = ({ routes }: Props) => {
             ) : (
               <button
                 type="button"
-                className="mt-2 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                disabled={cartStatus.some(x => x.type === CartTypeEnum.ADD_CART && x.id === product.id)}
+                className="mt-2 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-slate-400 disabled:cursor-wait"
                 onClick={() =>
                   addToCart({ productId: product.id, quantity: 1 })
                 }

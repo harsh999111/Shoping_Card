@@ -41,18 +41,6 @@ export default function Cart() {
   const { cart, deleteCart } = useCart();
   const { products } = useProducts();
 
-
-  const displayCurrency = ({
-    price,
-    locale = 'en-IN',
-    currency = 'INR',
-  }) =>
-    new Intl.NumberFormat(locale, {
-      currency,
-      style: 'currency',
-    }).format(price)
-  
-
   return (
     <Transition.Root show={isCartVisible} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={showCart}>
@@ -161,14 +149,17 @@ export default function Cart() {
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
                         <p>
-                          {displayCurrency({
-                            price: cart.reduce((p, c) => {
+                          {new Intl.NumberFormat("en-IN", {
+                            currency: "INR",
+                            style: "currency",
+                          }).format(
+                            cart.reduce((p, c) => {
                               const product = products.find(
-                                x => x.id === c.productId
-                              )
-                              return p + c.quantity * product.price
-                            }, 0),
-                          })}
+                                (x) => x.id === c.productId
+                              );
+                              return product.price * c.quantity + p;
+                            }, 0)
+                          )}
                         </p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
