@@ -28,6 +28,9 @@ import { Range, getTrackBackground } from "react-range";
 import { useCart } from "../context/cartContext.tsx";
 import Cart from "../components/Cart";
 import ErrorMessage from "../components/Error/index.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { loadProductsAction } from "../actions/productsAction.ts";
+import { loadCartAction } from "../actions/cartAction.ts";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -91,18 +94,23 @@ type Props = {};
 
 const MainLayout = (props: Props) => {
   const { user } = useContext(AuthContext);
-  const { products, loadProducts } = useProducts();
-  const { loadCart, cart } = useCart();
+  const { loadProducts } = useProducts();
+  const { loadCart } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [values, setValues] = React.useState([]);
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(100);
+  const dispatch = useDispatch();
+  const { products, cart } = useSelector((state) => {
+    return {
+      products: state.products,
+      cart: state.cart,
+    };
+  });
 
   console.log(values);
-
-  console.log("location", location);
 
   const loadData = useCallback(async () => {
     await Promise.all([loadProducts(), loadCart()]);
@@ -119,6 +127,8 @@ const MainLayout = (props: Props) => {
 
   useEffect(() => {
     loadData();
+    loadProductsAction()(dispatch);
+    loadCartAction()(dispatch);
   }, []);
 
   if (!user) {
@@ -590,7 +600,9 @@ const MainLayout = (props: Props) => {
         </div>
       </div>
 
-    
+      {/* <main>
+        <Outlet />
+      </main> */}
       <footer>Footer...</footer>
 
       <ErrorMessage />

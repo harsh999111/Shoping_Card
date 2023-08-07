@@ -8,6 +8,7 @@ import {
 } from "react";
 import axiosInstance from "../axiosInstance.js";
 import { useAuth } from "./authContext.tsx";
+import useAPIStatus from "../hooks/useAPIStatus.tsx";
 
 type CartContextType = {
   cart: CartItemType[];
@@ -18,24 +19,12 @@ type CartContextType = {
   cartStatus: StatusType[];
 };
 
-export enum StatusEnum {
-  loading = "loading",
-  error = "error",
-}
-
 export enum CartTypeEnum {
   LOAD_CART = "LOAD_CART",
   ADD_CART = "ADD_CART",
   UPDATE_CART = "UPDATE_CART",
   DELETE_CART = "DELETE_CART",
 }
-
-type StatusType = {
-  state: StatusEnum;
-  message: string;
-  type: CartTypeEnum;
-  id?: number;
-};
 
 type CartItemType = {
   productId: number;
@@ -56,44 +45,12 @@ export const CartContext = createContext<CartContextType>({
 export const CartProvider = ({ children }: PropsWithChildren) => {
   const [cart, setCart] = useState<CartItemType[]>([]);
   const { user } = useAuth();
-  const [cartStatus, setCartStatus] = useState<StatusType[]>([]);
-
-  const changeLoadingState = ({
-    type,
-    message,
-    id,
-  }: Omit<StatusType, "state">) => {
-    setCartStatus((val) => {
-      return [...val, { state: StatusEnum.loading, type, message, id }];
-    });
-  };
-
-  const changeSuccessState = ({
-    type,
-    id,
-  }: Omit<StatusType, "state" | "message">) => {
-    setCartStatus((val) =>
-      val.filter((x) => !(x.type === type && x.id === id))
-    );
-  };
-
-  const changeErrorState = ({
-    type,
-    id,
-    message,
-  }: Omit<StatusType, "state">) => {
-    setCartStatus((val) =>
-      val.map((x) =>
-        x.type === type && x.id === id
-          ? {
-              ...x,
-              state: StatusEnum.error,
-              message: message,
-            }
-          : x
-      )
-    );
-  };
+  const {
+    status: cartStatus,
+    changeLoadingState,
+    changeSuccessState,
+    changeErrorState,
+  } = useAPIStatus();
 
   const loadCart = useCallback(async () => {
     const type = CartTypeEnum.LOAD_CART;

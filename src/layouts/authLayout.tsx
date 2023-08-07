@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
+import ErrorMessage from "../components/Error/index.tsx";
 
 type Props = {};
 
@@ -44,6 +45,8 @@ const AuthLayout = (props: Props) => {
           </p>
         )}
       </div>
+
+      <ErrorMessage />
     </div>
   );
 };
