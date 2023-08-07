@@ -15,6 +15,26 @@ import { ProductsProvider } from "./context/productsContext.js";
 import { CartProvider } from "./context/cartContext.tsx";
 import { AppProvider } from "./context/appContext.tsx";
 
+// Mounting
+
+// -> Constructor(call only Once) (initialize of state base on props)
+// -> getDerivedStateFromProps(static) (update state value base on props and state)
+// -> render (render HTML)
+// -> componentDidMount(call only Once)(API Call/event register/DOM manipulation)
+
+// Updating
+// -> getDerivedStateFromProps(static)
+// -> shouldComponentUpdate (imrove Performace)
+// -> render
+// -> getSnapShotBeforeUpdate (calculate DOM)(not possible in function component)
+// -> componentDidUpdate (DOM manipulation)
+
+// UnMounting
+// -> componentWillUnmount (cancel async calls)
+
+// Error (not possible in function component)
+// -> getDerivedStateFromError(static) (display error)
+// -> componentDidCatch (log error)
 const router = createBrowserRouter([
   {
     path: "/",

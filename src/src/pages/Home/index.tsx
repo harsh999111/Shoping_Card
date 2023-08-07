@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/authContext";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useProducts } from "../../context/productsContext.js";
 import { CartTypeEnum, useCart } from "../../context/cartContext.tsx";
-import { useSelector,useDispatch } from "react-redux/es/exports.js";
+
 type Props = {};
 
 function classNames(...classes) {
@@ -13,26 +13,12 @@ function classNames(...classes) {
 }
 
 const Home = ({ routes }: Props) => {
-  const {  loadProducts } = useProducts();
-  const {  addToCart, updateCart, deleteCart, cartStatus } = useCart();
+  const { products, loadProducts, productsStatus } = useProducts();
+  const { cart, addToCart, updateCart, deleteCart, cartStatus } = useCart();
   const { productCategory } = useParams();
   const [searchParams] = useSearchParams();
 
-
-  const { products,cart}= useSelector[state =>{
-    return{
-      products:state.products.data,
-      cart:state.cart.data
-    }
-  }]
-
   const [filteredProducts, setFilteredProducts] = useState([]);
-
-
-  const productsData = useSelector(state => state.products);
-
-  const dispatch =useDispatch();
-
 
   useEffect(() => {
     // let finalProducts = products;
@@ -64,10 +50,16 @@ const Home = ({ routes }: Props) => {
 
   console.log(productCategory);
 
-  const loadCart = cartStatus.find(x => x.type === CartTypeEnum.LOAD_CART )
+  const loadCart = cartStatus.find((x) => x.type === CartTypeEnum.LOAD_CART);
+  const loadProductsStatus = productsStatus.find((x) => x.type === "LOAD_PRODUCTS");
 
-  if(loadCart) {
-    return <div>{loadCart.message}</div>
+  if (loadCart || loadProductsStatus) {
+    return (
+      <div>
+        {loadCart?.message && <p>{loadCart.message}</p>}
+        {loadProductsStatus?.message && <p>{loadProductsStatus.message}</p>}
+      </div>
+    );
   }
 
   return (
@@ -160,7 +152,9 @@ const Home = ({ routes }: Props) => {
             ) : (
               <button
                 type="button"
-                disabled={cartStatus.some(x => x.type === CartTypeEnum.ADD_CART && x.id === product.id)}
+                disabled={cartStatus.some(
+                  (x) => x.type === CartTypeEnum.ADD_CART && x.id === product.id
+                )}
                 className="mt-2 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-slate-400 disabled:cursor-wait"
                 onClick={() =>
                   addToCart({ productId: product.id, quantity: 1 })

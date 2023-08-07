@@ -590,7 +590,9 @@ const MainLayout = (props: Props) => {
         </div>
       </div>
 
-    
+      {/* <main>
+        <Outlet />
+      </main> */}
       <footer>Footer...</footer>
 
       <ErrorMessage />
